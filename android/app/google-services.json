@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "162756144812",
+    "project_id": "todo-app-f6323",
+    "storage_bucket": "todo-app-f6323.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:162756144812:android:706862ef89714415fef909",
+        "android_client_info": {
+          "package_name": "com.example.toder"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGZUuQRnKXUkKeDwZ8RHYiRn27IfPZXsA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
