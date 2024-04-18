@@ -4,6 +4,7 @@ class ControllerOne extends ChangeNotifier{
 
   bool isVisible = false;
   bool isGrid = false;
+  bool isDark = false;
 
   TextEditingController titleController = TextEditingController();
   TextEditingController desController = TextEditingController();
@@ -19,6 +20,11 @@ class ControllerOne extends ChangeNotifier{
 
   void changeDate({required DateTime date}) {
     mydate = date;
+    notifyListeners();
+  }
+
+  void changeTheme(){
+    isDark=!isDark;
     notifyListeners();
   }
 

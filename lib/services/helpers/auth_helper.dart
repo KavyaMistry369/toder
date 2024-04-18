@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:toder/models/user_model.dart';
 
@@ -27,10 +28,11 @@ class AuthHelper {
     GoogleSignInAuthentication authentication = await account!.authentication;
 
     UserModel userModel = UserModel(image:account.photoUrl ?? "", name: account.displayName!, email: account.email);
-
+    String? token = await FirebaseMessaging.instance.getToken();
     firebaseFirestore.collection('users').doc(account.email).set({
       'name':account.displayName,
       'email':account.email,
+      'device_token':token,
     },SetOptions(merge: true));
 
     AuthCredential authCredential = GoogleAuthProvider.credential(
@@ -50,9 +52,11 @@ class AuthHelper {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
+      String? token = await FirebaseMessaging.instance.getToken();
       firebaseFirestore.collection('users').doc(userCredential.user!.email).set({
         'uid':userCredential.user!.uid,
         'email':email,
+        'device_token':token,
       },SetOptions(merge: true));
       return 'Success';
     } on FirebaseAuthException catch (e) {
@@ -73,9 +77,11 @@ class AuthHelper {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
+      String? token = await FirebaseMessaging.instance.getToken();
       firebaseFirestore.collection('users').doc(userCredential.user!.email).set({
         'uid':userCredential.user!.uid,
         'email':email,
+        'device_token':token,
       });
       return 'Success';
     } on FirebaseAuthException catch (e) {

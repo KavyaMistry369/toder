@@ -73,6 +73,8 @@ class AddPage extends StatelessWidget {
                           DateTime d = DateTime(0, 0, 0, t!.hour, t.minute);
                           p.changeTime(time: d.toLocal());
 
+                          log(d.toString());
+
                           time = d;
                           p.time = t.format(context).toString();
 
@@ -102,7 +104,6 @@ class AddPage extends StatelessWidget {
 
                           p.date = formatDate;
 
-                          log(p.date!);
                         },
                         icon: const Icon(
                           Icons.calendar_today,
@@ -127,7 +128,6 @@ class AddPage extends StatelessWidget {
                             time: p.time!,
                             date: p.date!,
                           );
-                          NotificationsHelper.notificationsHelper.scheduleNotification(scheduledDate: time!);
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                                 content: Text("Todo Add SuccessFully")),

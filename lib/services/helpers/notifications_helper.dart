@@ -1,6 +1,6 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/timezone.dart' as tzz;
 
 class NotificationsHelper {
   NotificationsHelper._();
@@ -8,60 +8,53 @@ class NotificationsHelper {
   static final NotificationsHelper notificationsHelper =
       NotificationsHelper._();
 
-  final FlutterLocalNotificationsPlugin notificationsPlugin =
-  FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
-  Future<void> initNotification() async {
-    AndroidInitializationSettings initializationSettingsAndroid =
-    const AndroidInitializationSettings('@mipmap/ic_launcher');
+  Future<void> init() async {
+    final AndroidInitializationSettings androidInitializationSettings =
+        AndroidInitializationSettings('logo');
 
-    var initializationSettingsIOS = DarwinInitializationSettings(
-        requestAlertPermission: true,
-        requestBadgePermission: true,
-        requestSoundPermission: true,
-        onDidReceiveLocalNotification:
-            (int id, String? title, String? body, String? payload) async {});
-
-    var initializationSettings = InitializationSettings(
-        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
-    await notificationsPlugin.initialize(initializationSettings,
-        onDidReceiveNotificationResponse:
-            (NotificationResponse notificationResponse) async {});
+    final InitializationSettings initializationSettings =
+        InitializationSettings(android: androidInitializationSettings);
 
     tz.initializeTimeZones();
 
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
-  notificationDetails() {
-    return const NotificationDetails(
-        android: AndroidNotificationDetails('channelId', 'channelName',
-            importance: Importance.max),
-        iOS: DarwinNotificationDetails());
-  }
-
-  Future showNotification(
-      {int id = 0, String? title, String? body, String? payLoad}) async {
-    return notificationsPlugin.show(
-        id, title, body, await notificationDetails());
-  }
-
-  Future scheduleNotification({int id = 0, String? title, String? body, String? payLoad,
-    required DateTime scheduledDate,
-  }) async {
-    await notificationsPlugin.zonedSchedule(
-        id,
-        title, body,
-        tz.TZDateTime.from(scheduledDate,tz.local).add(const Duration(seconds: 3)),
-        const NotificationDetails(
-            android: AndroidNotificationDetails('123', 'blog')),
-        androidAllowWhileIdle: true,
-        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime
-
+  void simpleNotifications() async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      'channelId',
+      'channelName',
+      importance: Importance.max,
+      priority: Priority.max,
     );
+
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    await flutterLocalNotificationsPlugin.show(
+        0, 'title Kavya', 'Flutter Developer', platformChannelSpecifics,
+        payload: 'data');
   }
 
+  void scheduledNotification({required DateTime myTime}) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      'channelId',
+      'channelName',
+      importance: Importance.max,
+      priority: Priority.max,
+    );
 
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(0, 'This is Title',
+        'This is Body',tzz.TZDateTime.from(myTime,tzz.local), platformChannelSpecifics,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime);
+  }
 }
-
-
-

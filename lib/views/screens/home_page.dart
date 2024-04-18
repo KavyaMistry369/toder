@@ -1,13 +1,30 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:toder/controllers/controller_one.dart';
 import 'package:toder/models/user_model.dart';
+import 'package:toder/services/helpers/FCM_helper.dart';
 import 'package:toder/services/helpers/auth_helper.dart';
 import 'package:toder/services/helpers/data_helper.dart';
 import 'package:toder/services/helpers/notifications_helper.dart';
 import 'package:toder/utils/routes.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+
+
+  @override
+  void initState() {
+    super.initState();
+    FCMHelper.fcmHelper.notifications();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +130,7 @@ class HomePage extends StatelessWidget {
                       icon: Icon(
                         Icons.logout_sharp,
                         color: Colors.white,
-                      ))
+                      )),
                 ],
                 currentAccountPicture: Hero(
                     tag: 'profile',
@@ -121,14 +138,28 @@ class HomePage extends StatelessWidget {
                         CircleAvatar(backgroundImage: NetworkImage(acc.image))),
                 accountName: Text(acc.name),
                 accountEmail: Text(acc.email)),
+            const SizedBox(height: 20,),
+            ListTile(title: Text("Change Theme"),trailing: IconButton(onPressed: (){
+              Provider.of<ControllerOne>(context,listen: false).changeTheme();
+            }, icon: (Provider.of<ControllerOne>(context).isDark)?Icon(Icons.light_mode_outlined):Icon(Icons.dark_mode_outlined)),),
+            const Spacer(),
+            Card(
+              child: ListTile(
+                onTap: (){
+                  AuthHelper.authHelper.signOut();
+                  Navigator.pushReplacementNamed(context,MyRoutes.login);
+                },
+                title: Text("Log Out"),trailing: IconButton(onPressed: (){
+              }, icon: Icon(Icons.logout),),),
+            ),
           ],
         ),
         semanticLabel: "Account",
       ),
       appBar: AppBar(
         actions: [
-          IconButton(onPressed: (){
-            NotificationsHelper.notificationsHelper.showNotification(title: 'Kavya Mistry');
+          IconButton(onPressed: ()async{
+            await FCMHelper.fcmHelper.getToken();
           }, icon: const Icon(Icons.notifications))
         ],
         title: const Text("My Todos"),

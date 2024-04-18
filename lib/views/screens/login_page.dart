@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +15,7 @@ class LoginPage extends StatelessWidget {
     TextEditingController emailController = TextEditingController();
     TextEditingController pswController = TextEditingController();
     return Scaffold(
+
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
@@ -55,15 +55,14 @@ class LoginPage extends StatelessWidget {
                 height: 30,
               ),
               CupertinoTextField(
+                decoration: BoxDecoration(
+                    color: CupertinoColors.systemGroupedBackground,
+                    borderRadius: BorderRadius.circular(15)),
                 controller: emailController,
                 placeholder: "Email",
                 prefix: const Icon(
                   Icons.email_outlined,
                   size: 30,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  color: CupertinoColors.systemGrey6,
                 ),
               ),
               const SizedBox(
@@ -86,9 +85,8 @@ class LoginPage extends StatelessWidget {
                   size: 30,
                 ),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  color: CupertinoColors.systemGrey6,
-                ),
+                    color: CupertinoColors.systemGroupedBackground,
+                    borderRadius: BorderRadius.circular(15)),
               ),
               const SizedBox(
                 height: 30,
